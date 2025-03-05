@@ -1,0 +1,124 @@
+<div class="container">
+  <form [formGroup]="formReserva" (ngSubmit)="guardar()">
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="origen" class="form-label">Origen</label>
+        <select class="form-select" id="origen" formControlName="origen" required>
+          <option value="">Seleccione una ciudad</option>
+          <option *ngFor="let ciudad of listCiudades" [value]="ciudad.id">
+            {{ ciudad.city }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="destino" class="form-label">Destino</label>
+        <select class="form-select" id="destino" formControlName="destino" required>
+          <option value="">Seleccione una ciudad</option>
+          <option *ngFor="let ciudad of listCiudades" [value]="ciudad.id">
+            {{ ciudad.city }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="fecha" class="form-label">Fecha</label>
+      <input type="date" class="form-control" id="fecha" formControlName="fecha">
+    </div>
+
+    <div class="mb-3">
+      <button type="button" class="btn btn-primary w-100" (click)="buscarServicios()">Buscar</button>
+    </div>
+
+
+    <div class="mb-3">
+      <label for="servicio" class="form-label">Servicio</label>
+      <select class="form-select" id="servicio" formControlName="servicio">
+        <option value="">Seleccione un servicio</option>
+        <option *ngFor="let servicio of listServicios" [value]="servicio.id">
+          Partida: {{ servicio.departureDate }} - Llegada: {{ servicio.departureTime }}
+        </option>
+      </select>
+    </div>
+    
+
+
+    
+    <div class="mb-3">
+      <label for="documento" class="form-label">Documento</label>
+      <input type="text" class="form-control" formControlName="documento" 
+      [ngClass]="{
+        'is-invalid': formReserva.get('documento')?.invalid && formReserva.get('documento')?.touched,
+        'is-valid': formReserva.get('documento')?.valid && formReserva.get('documento')?.touched
+      }" >
+      <div *ngIf="formReserva.get('documento')?.hasError('required') && formReserva.get('documento')?.touched" class="invalid-feedback">
+        Este campo es necesario
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input type="text" class="form-control" formControlName="nombre"
+      [ngClass]="{
+        'is-invalid': formReserva.get('nombre')?.invalid && formReserva.get('nombre')?.touched,
+        'is-valid': formReserva.get('nombre')?.valid && formReserva.get('nombre')?.touched
+      }" >
+      <div *ngIf="formReserva.get('nombre')?.hasError('required') && formReserva.get('nombre')?.touched" class="invalid-feedback">
+        Este campo es necesario
+      </div>
+      
+    </div>
+    
+    <div class="mb-3">
+      <label for="apellido" class="form-label">Apellido</label>
+      <input type="text" class="form-control" formControlName="apellido"
+      [ngClass]="{
+        'is-invalid': formReserva.get('apellido')?.invalid && formReserva.get('apellido')?.touched,
+        'is-valid': formReserva.get('apellido')?.valid && formReserva.get('apellido')?.touched
+      }" >
+       <div *ngIf="formReserva.get('apellido')?.hasError('required') && formReserva.get('apellido')?.touched" class="invalid-feedback">
+        Este campo es necesario
+      </div>
+    </div>
+
+ 
+    <div formArrayName="pasajeros">
+      <div *ngFor="let pasajero of pasajeros.controls; let i = index" [formGroupName]="i" class="border rounded p-3 mb-3">
+        <button type="button" class="btn-close position-absolute top-0 end-0 m-2" (click)="removePasajero(i)"></button>
+        
+        <div class="mb-3">
+          <label for="documento" class="form-label">Documento</label>
+          <input type="text" class="form-control" formControlName="documento">
+          <div *ngIf="pasajero.get('documento')?.hasError('required') && pasajero.get('documento')?.touched" class="invalid-feedback">
+            Campo requerido
+          </div>
+        </div>
+    
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input type="text" class="form-control" formControlName="nombre">
+          <div *ngIf="pasajero.get('nombre')?.hasError('required') && pasajero.get('nombre')?.touched" class="invalid-feedback">
+            Campo requerido
+          </div>
+        </div>
+    
+        <div class="mb-3">
+          <label for="apellido" class="form-label">Apellido</label>
+          <input type="text" class="form-control" formControlName="apellido">
+          <div *ngIf="pasajero.get('apellido')?.hasError('required') && pasajero.get('apellido')?.touched" class="invalid-feedback">
+            Campo requerido
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mb-3">
+      <button type="button" class="btn btn-secondary" (click)="addPasajero()">Agregar Pasajero</button>
+    </div>
+    
+
+
+    <button type="submit" class="btn btn-success" [disabled]="!formReserva.valid">Guardar</button>
+  </form>
+</div>
