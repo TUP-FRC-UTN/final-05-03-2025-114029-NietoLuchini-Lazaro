@@ -13,7 +13,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let reserva of listReservas; let i = index">
-          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ reserva.reservationCode }}</td>
           <td>{{ reserva.document }}</td>
           <td>{{ reserva.firstName }}</td>
           <td>{{ reserva.lastName }}</td>

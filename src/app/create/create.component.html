@@ -84,8 +84,9 @@
 
  
     <div formArrayName="pasajeros">
-      <div *ngFor="let pasajero of pasajeros.controls; let i = index" [formGroupName]="i" class="border rounded p-3 mb-3">
-        <button type="button" class="btn-close position-absolute top-0 end-0 m-2" (click)="removePasajero(i)"></button>
+      <div *ngFor="let pasajero of pasajeros.controls; let i = index" [formGroupName]="i" class="border rounded p-3 mb-3 position-relative">
+        <!-- Botón de eliminar -->
+        <button type="button" class="btn-close position-absolute top-0 end-0" (click)="removePasajero(i)"></button>
         
         <div class="mb-3">
           <label for="documento" class="form-label">Documento</label>
@@ -114,11 +115,8 @@
     </div>
     
     <div class="mb-3">
-      <button type="button" class="btn btn-secondary" (click)="addPasajero()">Agregar Pasajero</button>
+      <button type="button" class="btn btn-success" (click)="addPasajero()">Agregar Pasajero</button>
     </div>
     
-
-
-    <button type="submit" class="btn btn-success" [disabled]="!formReserva.valid">Guardar</button>
-  </form>
-</div>
+    <button type="submit" class="btn btn-primary" [disabled]="!formReserva.valid">Confirmar Reserva</button>
+    

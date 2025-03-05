@@ -45,6 +45,10 @@ export class CreateComponent implements OnInit{
         this.formReserva.get('destino')?.setErrors({ mismoOrigen: true });
       }
     });
+
+    this.formReserva.get('documento')?.valueChanges.subscribe(() => {
+      this.validarDocumento();
+    });
   }
 
   get pasajeros(): FormArray {
@@ -105,22 +109,32 @@ export class CreateComponent implements OnInit{
   guardar() {
     const form = this.formReserva.value;
   
-    const reserva: Reservas = {
-      id: Math.floor(Math.random() * 1000000).toString(),
-      reservationCode: this.generarCodigo(),
-      document: form.documento,
-      firstName: form.nombre,
-      lastName: form.apellido,
-      service: form.servicio,
-      passengers: this.pasajeros.controls.map((control: AbstractControl) => {
+  // Crear el objeto reserva
+  const reserva: Reservas = {
+    id: Math.floor(Math.random() * 1000000).toString(),
+    reservationCode: this.generarCodigo(),
+    document: form.documento,
+    firstName: form.nombre,
+    lastName: form.apellido,
+    service: form.servicio,
+    passengers: [
+      // Agregar la persona fuera del array de pasajeros
+      {
+        document: form.documento,
+        firstName: form.nombre,
+        lastName: form.apellido
+      },
+      // Agregar los pasajeros del array de pasajeros
+      ...this.pasajeros.controls.map((control: AbstractControl) => {
         const pasajero = control as FormGroup;
         return {
           document: pasajero.get('documento')?.value,
           firstName: pasajero.get('nombre')?.value,
           lastName: pasajero.get('apellido')?.value
         };
-      }) || [], 
-    };
+      }) || []
+    ]
+  };
   
     if (reserva) {
       this.reservaService.post(reserva).subscribe(
@@ -138,6 +152,30 @@ export class CreateComponent implements OnInit{
   }
   
 
+  validarDocumento(): void {
+    const documento = this.formReserva.get('documento')?.value;
   
+    if (!documento) {
+      alert('Debe ingresar un documento.');
+      return;
+    }
+
+    this.reservaService.getReservas().subscribe(
+      (reservas) => {
+        const reservaExistente = reservas.find((reserva) => reserva.document === documento);
+  
+        if (reservaExistente) {
+          alert('Ya existe una reserva con ese documento.');
+        } else {
+
+          console.log('No hay reservas con ese documento.');
+        }
+      },
+      (error) => {
+        console.error('Error al obtener las reservas:', error);
+        alert('Hubo un error al verificar el documento.');
+      }
+    );
+  }
 
 }
